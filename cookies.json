@@ -1,0 +1,33 @@
+[
+    {
+      "name": "app_state",
+      "value": "%7B%22cart%22%3A%7B%22enteredComment%22%3A%22%22%2C%22sort%22%3A%22none%22%2C%22selectedDetailUids%22%3A%5B%5D%2C%22selectedDeliveryType%22%3A%221%22%2C%22cartViewMode%22%3A0%7D%2C%22appraiseProduct%22%3A%7B%22appraiseCardOpenState%22%3A0%7D%2C%22ordersInfo%22%3A%7B%22ordersInfo%22%3A%7B%22disabledColumns%22%3Anull%7D%7D%2C%22user%22%3A%7B%22confirmCity%22%3Afalse%2C%22isWholesaleWidgetOpen%22%3Afalse%2C%22mobileMenuListToggle%22%3A%7B%7D%2C%22newSiteLoyalty%22%3Afalse%7D%2C%22mobileVersion%22%3A%7B%22isMobileDevice%22%3Afalse%7D%2C%22abTest%22%3A%5B%5D%2C%22server%22%3A%7B%22domainDebug%22%3A%22%22%7D%7D",
+      "domain": "autopiter.ru",
+      "path": "/"
+    },
+    {
+      "name": "c2d_widget_id",
+      "value": "%7B%224638553b3f7ad00c20bd5c552ff72e4c%22%3A%22%7B%5C%22client_id%5C%22%3A%5C%22%5Bchat%5D%20db4bd8ef9095e122e847%5C%22%2C%5C%22client_token%5C%22%3A%5C%22e8fb2aba2a2da4ce5964fb8f7c21ced6%5C%22%7D%22%7D",
+      "domain": "autopiter.ru",
+      "path": "/"
+    },
+    {
+      "name": "guestId",
+      "value": "TYxaXnj_emlktm4VbkVo7",
+      "domain": "autopiter.ru",
+      "path": "/"
+    },
+    {
+      "name": "paid_link_uid",
+      "value": "%7B%22uid%22%3A%22ba5a73230e0f289cc7b94721989dc72d%22%2C%22type%22%3A%22admitad%22%2C%22isoDate%22%3A%222025-04-17T06%3A10%3A50.561Z%22%7D",
+      "domain": "autopiter.ru",
+      "path": "/"
+    },
+    {
+      "name": "useCookieState_shouldAutoOpenChatWidget",
+      "value": "false",
+      "domain": "autopiter.ru",
+      "path": "/"
+    }
+  ]
+  
