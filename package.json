@@ -1,6 +1,7 @@
 {
   "type": "module",
   "dependencies": {
+<<<<<<< HEAD
     "axios": "^1.8.4",
     "cheerio": "^1.0.0",
     "exceljs": "^4.4.0",
@@ -10,5 +11,18 @@
     "puppeteer": "^24.6.1",
     "puppeteer-extra-plugin-stealth": "^2.11.2",
     "user-agents": "^1.1.511"
+=======
+    "exceljs": "^4.4.0",
+    "faker": "^6.6.6",
+    "fs": "^0.0.1-security",
+    "fs-extra": "^11.3.0",
+    "puppeteer": "^24.6.1",
+    "puppeteer-extra": "^3.3.6",
+    "puppeteer-extra-plugin-proxy": "^1.0.2",
+    "puppeteer-extra-plugin-stealth": "^2.11.2",
+    "random-useragent": "^0.5.0",
+    "user-agents": "^1.1.510",
+    "xlsx": "^0.18.5"
+>>>>>>> ea2c2d4 (add parser)
   }
 }
