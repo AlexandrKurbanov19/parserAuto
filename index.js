@@ -95,7 +95,7 @@ function randomDelay(min = 100, max = 1000) {
     const steps = 3 + Math.floor(Math.random() * 5);
     for (let i = 0; i < steps; i++) {
       await page.evaluate(() => window.scrollBy(0, window.innerHeight * (0.1 + Math.random() * 0.2)));
-      await randomDelay(100, 1000);
+      await randomDelay(100, 2600);
     }
     await page.evaluate(() => window.scrollTo(0, 0));
   }
@@ -121,7 +121,7 @@ async function getPage(browser) {
   await page.setExtraHTTPHeaders({
     'Accept-Language': 'ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7'
   });
-  await handleAntiBotCaptcha(page);
+//   await handleAntiBotCaptcha(page);
   await humanScroll(page);
   return page;
 }
@@ -133,13 +133,14 @@ async function getPage(browser) {
  */
 async function parseMainPage(page) {
   const baseUrl = 'https://autopiter.ru';
-  const url = `${baseUrl}/service-parts/geely`;
+  const url = `${baseUrl}/service-parts/chery`;
   await page.goto(url, { waitUntil: 'networkidle2' });
   // Имитация поведения пользователя: небольшая случайная задержка
-  await sleep(1500 + Math.random() * 1000);
+//   await handleAntiBotCaptcha(page);
+await sleep(1500 + Math.random() * 1000);
 
   // Выбираем все ссылки, основываясь на атрибуте href
-  const links = await page.$$eval('a[href^="/service-parts/geely/"]', anchors =>
+  const links = await page.$$eval('a[href^="/service-parts/chery/"]', anchors =>
     // Фильтруем дубликаты и оставляем только те, которые относятся к моделям (например, можно фильтровать по наличию класса "CatalogCard__root")
     Array.from(new Set(anchors
       .filter(a => a.className.indexOf('CatalogCard__root') !== -1)
@@ -159,7 +160,8 @@ async function parseMainPage(page) {
 async function parseModelPage(page, url) {
     const baseUrl = 'https://autopiter.ru';
     await page.goto(url, { waitUntil: 'networkidle2' });
-    await sleep(1500 + Math.random() * 1000); // задержка для имитации пользователя
+    // await handleAntiBotCaptcha(page);
+    await sleep(1500 + Math.random() * 1000);
   
     // Получаем все элементы <a>, у которых есть нужный класс (начинается с Table__linkRow)
     const modelLinks = await page.$$eval('a[class^="Table__linkRow"]', anchors =>
@@ -177,8 +179,11 @@ async function parseModelPage(page, url) {
  */
 async function parseDetailPage(page, url) {
   await page.goto(url, { waitUntil: 'networkidle2' });
-  await sleep(1500 + Math.random() * 1000);
- 
+//   await handleAntiBotCaptcha(page);
+await sleep(1500 + Math.random() * 1000);
+ // Получаем название автомобиля из заголовка
+ const vehicleName = await page.$eval('h1[class^="PageTitle__root"]', el => el.innerText.trim());
+
   // Парсим строки таблицы, где каждая строка представлена ссылкой <a class="Table__linkRow...">
   const data = await page.$$eval('a[class^="Table__linkRow"]', rows => {
     return rows.map(row => {
@@ -187,13 +192,13 @@ async function parseDetailPage(page, url) {
       return {
         "Артикул": cells[1] ? cells[1].innerText.trim() : '',
         "Наименование": cells[2] ? cells[2].innerText.trim() : '',
-        // "Комментарий": cells[3] ? cells[3].innerText.trim() : '',
+        "Комментарий": cells[3] ? cells[3].innerText.trim() : '',
         "Кратность": cells[4] ? cells[4].innerText.trim() : '',
         "Цены": cells[5] ? cells[5].innerText.trim() : ''
       };
     });
   });
-  return data;
+  return  { vehicleName, data };;
 }
 
 /**
@@ -201,13 +206,36 @@ async function parseDetailPage(page, url) {
  * @param {Object[]} dataArray - Массив объектов с данными
  * @param {string} filename - Имя файла для сохранения
  */
-function saveToExcel(dataArray, filename) {
-  // Преобразуем массив объектов в рабочую книгу
-  const worksheet = XLSX.utils.json_to_sheet(dataArray, { header: ["№", "Артикул", "Наименование", "Комментарий", "Кратность", "Цены"] });
-  const workbook = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(workbook, worksheet, 'Данные');
-  XLSX.writeFile(workbook, filename);
-}
+function saveToExcel(groupedData, filename) {
+    const sheetData = [];
+  
+    groupedData.forEach(({ vehicleName, data }) => {
+      // Вставляем заголовок для машины
+      sheetData.push([`${vehicleName}`]);
+      // Вставляем шапку таблицы
+      sheetData.push(["№", "Артикул", "Наименование", "Комментарий", "Кратность", "Цены"]);
+  
+      // Вставляем строки с деталями
+      data.forEach((item, index) => {
+        sheetData.push([
+          index + 1,
+          item["Артикул"],
+          item["Наименование"],
+          item["Комментарий"],
+          item["Кратность"],
+          item["Цены"]
+        ]);
+      });
+  
+      // Пустая строка между машинами
+      sheetData.push([]);
+    });
+  
+    const worksheet = XLSX.utils.aoa_to_sheet(sheetData);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Детали');
+    XLSX.writeFile(workbook, filename);
+  }
 
 /**
  * Главная функция, объединяющая все шаги
